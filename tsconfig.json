@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "/",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "rootDir": "src",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "target": "es2015",
+    "types": ["node"]
+  }
+}
