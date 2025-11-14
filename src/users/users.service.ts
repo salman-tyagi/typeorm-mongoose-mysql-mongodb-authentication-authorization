@@ -17,14 +17,9 @@ export class UsersService {
     });
   }
 
-  async findUserByEmail(email: string): Promise<User> {
-    return await this.repo.findOne({
-      where: {
-        email,
-      },
-      select: {
-        _id: true,
-      },
+  findUserByEmail(email: string): Promise<User> {
+    return this.repo.findOne({
+      where: { email },
     });
   }
 }

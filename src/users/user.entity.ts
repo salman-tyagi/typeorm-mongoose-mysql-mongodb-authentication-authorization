@@ -1,4 +1,4 @@
-import { Entity, ObjectId, Column, ObjectIdColumn } from 'typeorm';
+import { Entity, ObjectId, Column, ObjectIdColumn, AfterInsert } from 'typeorm';
 
 export enum Roles {
   USER = 'user',
@@ -19,16 +19,18 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
-  confirmPassword: string;
-
   @Column({
     type: 'enum',
     enum: Roles,
     default: Roles.USER,
   })
-  role: Roles;
+  role: Roles = Roles.USER;
 
   @Column()
   createdAt: Date = new Date();
+
+  @AfterInsert()
+  logInsert() {
+    console.log(`inserted document with id, ${this._id}`);
+  }
 }
