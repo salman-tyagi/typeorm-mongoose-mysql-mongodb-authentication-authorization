@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
@@ -16,6 +17,7 @@ import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 
 import { UserDto } from './dtos/user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('users')
 @UseInterceptors(new SerializeInterceptor(UserDto))
@@ -28,6 +30,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   getAllUsers(@Query() query: Partial<User> = {}): Promise<User[]> {
     return this.usersService.findAll(query);
   }

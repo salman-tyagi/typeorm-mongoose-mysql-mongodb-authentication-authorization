@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import morgan from 'morgan';
 import { ValidationPipe } from '@nestjs/common';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 
@@ -9,6 +10,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   app.use(morgan('dev'));
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
