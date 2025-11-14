@@ -17,9 +17,7 @@ export class UsersService {
     });
   }
 
-  findUserByEmail(email: string): Promise<User> {
-    return this.repo.findOne({
-      where: { email },
-    });
+  findUsers(query: Partial<User>): Promise<User[]> {
+    return this.repo.find(query);
   }
 }
