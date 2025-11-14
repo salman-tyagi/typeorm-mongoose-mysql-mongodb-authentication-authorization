@@ -11,6 +11,7 @@ import { EmailService } from './email.service';
   imports: [
     MailerModule.forRootAsync({
       inject: [ConfigService],
+
       async useFactory(configService: ConfigService) {
         return {
           transport: {
@@ -21,11 +22,13 @@ import { EmailService } from './email.service';
               pass: configService.get<string>('MAIL_PASS'),
             },
           },
+
           defaults: {
             from: `${configService.get<string>('MAIL_FROM')} <${configService.get<string>(
               'MAIL_FROM_EMAIL'
             )}>`,
           },
+
           template: {
             dir: 'src/templates',
             adapter: new EjsAdapter(),

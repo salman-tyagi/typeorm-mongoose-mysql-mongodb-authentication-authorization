@@ -1,5 +1,6 @@
 import { ObjectId } from 'typeorm';
 import { Expose, Transform } from 'class-transformer';
+import { IsOptional } from 'class-validator';
 
 export class UserDto {
   @Expose()
@@ -11,4 +12,8 @@ export class UserDto {
 
   @Expose()
   email: string;
+
+  @Expose()
+  @IsOptional()
+  token: string;
 }
