@@ -8,7 +8,7 @@ const passwordOptions: IsStrongPasswordOptions = {
   minUppercase: 0,
 };
 
-export class CreateUserDto {
+export class SignupDto {
   @IsString()
   name: string;
 

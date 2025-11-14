@@ -2,11 +2,12 @@ import { BadRequestException, Body, Controller, Post, UseInterceptors } from '@n
 
 import { AuthService } from './auth.service';
 
-import { CreateUserDto } from '../users/dtos/create-user.dto';
+import { SignupDto } from './dtos/signup.dto';
 import { UserDto } from '../users/dtos/user.dto';
-import { LoginDto } from '../users/dtos/login.dto';
+import { LoginDto } from './dtos/login.dto';
 
 import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
+import { CookieInterceptor } from './interceptors/cookie.interceptor';
 
 @Controller('auth')
 @UseInterceptors(new SerializeInterceptor(UserDto))
@@ -14,7 +15,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() body: CreateUserDto) {
+  signup(@Body() body: SignupDto) {
     const { password, confirmPassword } = body;
 
     if (password !== confirmPassword) {
@@ -25,6 +26,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @UseInterceptors(CookieInterceptor)
   login(@Body() { email, password }: LoginDto) {
     return this.authService.login(email, password);
   }

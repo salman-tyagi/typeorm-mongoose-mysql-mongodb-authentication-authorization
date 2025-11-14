@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 
 import { User } from '../users/user.entity';
-import { CreateUserDto } from '../users/dtos/create-user.dto';
+import { SignupDto } from './dtos/signup.dto';
 
 import { UsersService } from '../users/users.service';
 import { EmailService } from '../common/email.service';
@@ -19,7 +19,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async register({ name, email, password }: CreateUserDto) {
+  async register({ name, email, password }: SignupDto) {
     const users = await this.usersService.findAll({ email });
 
     if (users.length) {
