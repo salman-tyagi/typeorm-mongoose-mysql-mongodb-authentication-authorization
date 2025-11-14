@@ -7,12 +7,14 @@ import { User } from '../users/user.entity';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
 
 import { UsersService } from '../users/users.service';
+import { EmailService } from '../common/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private repo: MongoRepository<User>,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private emailService: EmailService
   ) {}
 
   async register({ name, email, password }: CreateUserDto) {
@@ -25,6 +27,11 @@ export class AuthService {
     const hashedPass = await bcrypt.hash(password, 12);
 
     const newUser = this.repo.create({ name, email, password: hashedPass });
+
+    if (newUser) {
+      this.emailService.sendWelcomeMail(newUser);
+    }
+
     return this.repo.save(newUser);
   }
 }
