@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository, ObjectId } from 'typeorm';
 
 import { User } from './user.entity';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -11,13 +12,41 @@ export class UsersService {
     private repo: MongoRepository<User>
   ) {}
 
-  findUser(id: ObjectId): Promise<User> {
+  findOne(id: ObjectId): Promise<User> {
     return this.repo.findOne({
       where: { _id: id },
     });
   }
 
-  findUsers(query: Partial<User>): Promise<User[]> {
+  findAll(query: Partial<User>): Promise<User[]> {
     return this.repo.find(query);
+  }
+
+  async updateOne(id: ObjectId, body: UpdateUserDto) {
+    // Find user
+    const user = await this.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    // Update user
+    Object.assign(user, body);
+
+    // Return user
+    return this.repo.save(user);
+  }
+
+  async deleteOne(id: ObjectId): Promise<null> {
+    // Find user
+    const user = await this.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    // Remove user
+    this.repo.remove(user);
+    return null;
   }
 }

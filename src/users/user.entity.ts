@@ -1,4 +1,12 @@
-import { Entity, ObjectId, Column, ObjectIdColumn, AfterInsert } from 'typeorm';
+import {
+  Entity,
+  ObjectId,
+  Column,
+  ObjectIdColumn,
+  AfterInsert,
+  AfterUpdate,
+  AfterRemove,
+} from 'typeorm';
 
 export enum Roles {
   USER = 'user',
@@ -32,5 +40,15 @@ export class User {
   @AfterInsert()
   logInsert() {
     console.log(`inserted document with id, ${this._id}`);
+  }
+
+  @AfterUpdate()
+  logUpdate() {
+    console.log(`updated document with id, ${this._id}`);
+  }
+
+  @AfterRemove()
+  logRemove() {
+    console.log(`removed document with id, ${this._id}`);
   }
 }
