@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { UsersModule } from './users/users.module';
+import { User } from './users/user.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,12 +20,14 @@ import { AppService } from './app.service';
         return {
           type: 'mongodb',
           url: configService.get<string>('DEV_MONGO_DB'),
-          entities: [],
+          entities: [User],
           synchronize: true,
           logging: true,
         };
       },
     }),
+
+    UsersModule,
   ],
 
   controllers: [AppController],
