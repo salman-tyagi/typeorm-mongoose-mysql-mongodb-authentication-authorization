@@ -16,4 +16,8 @@ export class UserDto {
   @Expose()
   @IsOptional()
   token: string;
+
+  @Expose()
+  @IsOptional()
+  message: string;
 }

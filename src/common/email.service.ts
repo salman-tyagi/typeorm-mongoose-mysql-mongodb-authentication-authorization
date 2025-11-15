@@ -18,4 +18,17 @@ export class EmailService {
       },
     });
   }
+
+  sendResetToken({ name, email }: User, resetLink: string) {
+    return this.mailService.sendMail({
+      to: email,
+      subject: 'Password Reset Request | Expires in 10 mins',
+      template: 'password-reset.ejs',
+      context: {
+        name,
+        resetLink,
+        year: new Date().getFullYear(),
+      },
+    });
+  }
 }

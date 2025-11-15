@@ -15,7 +15,7 @@ import { UserDto } from '../users/dtos/user.dto';
 import { LoginDto } from './dtos/login.dto';
 
 import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
-import { CookieInterceptor } from './interceptors/cookie.interceptor';
+// import { CookieInterceptor } from './interceptors/cookie.interceptor';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '../users/user.entity';
 import { AuthGuard } from './guards/auth.guard';
@@ -37,7 +37,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseInterceptors(CookieInterceptor)
+  // @UseInterceptors(CookieInterceptor)
   login(@Body() { email, password }: LoginDto) {
     return this.authService.login(email, password);
   }
@@ -47,4 +47,11 @@ export class AuthController {
   whoAmI(@CurrentUser() user: User) {
     return user;
   }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() { email }: { email: string }) {
+    return this.authService.forgotPassword(email);
+  }
+
+  resetPassword() {}
 }

@@ -37,6 +37,9 @@ export class User {
   @Column()
   createdAt: Date = new Date();
 
+  @Column()
+  passwordResetToken?: string;
+
   @AfterInsert()
   logInsert() {
     console.log(`inserted document with id, ${this._id}`);
