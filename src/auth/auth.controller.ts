@@ -3,16 +3,20 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
+import { UtilsService } from '../common/utils.service';
 
 import { SignupDto } from './dtos/signup.dto';
 import { UserDto } from '../users/dtos/user.dto';
 import { LoginDto } from './dtos/login.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 
 import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 // import { CookieInterceptor } from './interceptors/cookie.interceptor';
@@ -23,17 +27,13 @@ import { AuthGuard } from './guards/auth.guard';
 @Controller('auth')
 @UseInterceptors(new SerializeInterceptor(UserDto))
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private utilsService: UtilsService) {}
 
   @Post('signup')
-  signup(@Body() body: SignupDto) {
-    const { password, confirmPassword } = body;
+  signup(@Body() { name, email, password, confirmPassword }: SignupDto) {
+    this.utilsService.isPasswordEqual(password, confirmPassword);
 
-    if (password !== confirmPassword) {
-      throw new BadRequestException('Password mismatch');
-    }
-
-    return this.authService.register(body);
+    return this.authService.register(name, email, password);
   }
 
   @Post('login')
@@ -53,5 +53,13 @@ export class AuthController {
     return this.authService.forgotPassword(email);
   }
 
-  resetPassword() {}
+  @Patch('reset-password/:resetToken')
+  resetPassword(
+    @Body() { password, confirmPassword }: ResetPasswordDto,
+    @Param('resetToken') resetToken: string
+  ) {
+    this.utilsService.isPasswordEqual(password, confirmPassword);
+
+    return this.authService.resetPassword(password, resetToken);
+  }
 }
