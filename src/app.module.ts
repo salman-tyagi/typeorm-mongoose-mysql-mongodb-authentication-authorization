@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -38,6 +40,35 @@ import { AuthModule } from './auth/auth.module';
           secret: configService.get('ACCESS_TOKEN_SECRET'),
           signOptions: {
             expiresIn: configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+          },
+        };
+      },
+    }),
+
+    MailerModule.forRootAsync({
+      inject: [ConfigService],
+
+      async useFactory(configService: ConfigService) {
+        return {
+          transport: {
+            host: configService.get<string>('MAIL_HOST'),
+            port: configService.get<number>('MAIL_PORT'),
+            auth: {
+              user: configService.get<string>('MAIL_USER'),
+              pass: configService.get<string>('MAIL_PASS'),
+            },
+          },
+
+          defaults: {
+            from: `${configService.get<string>('MAIL_FROM')} <${configService.get<string>(
+              'MAIL_FROM_EMAIL'
+            )}>`,
+          },
+
+          template: {
+            dir: 'src/templates',
+            adapter: new EjsAdapter(),
+            options: { strict: false },
           },
         };
       },

@@ -12,7 +12,7 @@ export class CookieInterceptor implements NestInterceptor {
         const res: Response = context.switchToHttp().getResponse();
 
         res.cookie('token', user.token, {
-          expires: new Date(new Date().getTime() + 10 * 60 * 1000),
+          expires: new Date(new Date().getTime() + 1 * 60 * 60 * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV !== 'development',
         });

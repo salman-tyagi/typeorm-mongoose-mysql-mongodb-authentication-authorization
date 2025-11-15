@@ -12,7 +12,7 @@ import { ObjectId } from 'mongodb';
 import { User } from '../../users/user.entity';
 import { UsersService } from '../../users/users.service';
 
-interface RequestUser extends Request {
+export interface RequestUser extends Request {
   user?: User;
 }
 

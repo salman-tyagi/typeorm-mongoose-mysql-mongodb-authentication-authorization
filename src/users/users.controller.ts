@@ -12,12 +12,14 @@ import {
 import { ObjectId } from 'mongodb';
 
 import { UsersService } from './users.service';
-import { User } from './user.entity';
+import { User, Roles } from './user.entity';
 import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 
 import { UserDto } from './dtos/user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { AuthorizationGuard } from '../auth/guards/authorization.guard';
 
 @Controller('users')
 @UseInterceptors(new SerializeInterceptor(UserDto))
@@ -30,6 +32,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(new AuthorizationGuard([Roles.ADMIN]))
   @UseGuards(AuthGuard)
   getAllUsers(@Query() query: Partial<User> = {}): Promise<User[]> {
     return this.usersService.findAll(query);
